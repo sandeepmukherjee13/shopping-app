@@ -2,9 +2,31 @@
 import { loginFormControls } from '@/utils';
 import InputComponent from '@/components/FormElements/InputComponent';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { login } from '@/services/login';
+
+const initialFormdata = {
+  email: '',
+  password: ''
+};
 
 const Login = () => {
+  const [formData, setFormData] = useState(initialFormdata);
   const router = useRouter();
+
+  function isValidForm() {
+    return formData &&
+      formData.email &&
+      formData.email.trim() !== '' &&
+      formData.password &&
+      formData.password.trim() !== ''
+      ? true
+      : false;
+  }
+  const handleLogin = async () => {
+    const res = await login(formData);
+    console.log(res);
+  };
 
   return (
     <div className="bg-white relative">
@@ -22,10 +44,21 @@ const Login = () => {
                       type={controlItem.type}
                       placeholder={controlItem.placeholder}
                       label={controlItem.label}
+                      value={formData[controlItem.id]}
+                      onChange={(event) => {
+                        setFormData({
+                          ...formData,
+                          [controlItem.id]: event.target.value
+                        });
+                      }}
                     />
                   ) : null
                 )}
-                <button className="inline-flex w-full items-center justify-center bg-green-500 px-6 py-4 text-lg text-white transition-all duration-300 ease-in-out focus:shadow font-medium uppercase tracking-wide">
+                <button
+                  className="disabled:opacity-50 inline-flex w-full items-center justify-center bg-green-500 px-6 py-4 text-lg text-white transition-all duration-300 ease-in-out focus:shadow font-medium uppercase tracking-wide"
+                  disabled={!isValidForm()}
+                  onClick={handleLogin}
+                >
                   Login
                 </button>
                 <div className="flex flex-col gap-2">
