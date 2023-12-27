@@ -4,13 +4,10 @@ import { GlobalContext } from '@/context';
 import { adminNavOptions, navOptions } from '@/utils';
 import { useContext } from 'react';
 import CommonModal from '../CommonModal';
+import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 const isAdminView = false;
-const isAuthUser = true;
-
-const user = {
-  role: 'admin'
-};
 
 function NavItems({ isModalView = false }) {
   return (
@@ -47,6 +44,17 @@ function NavItems({ isModalView = false }) {
 
 const Navbar = () => {
   const { showNavModal, setShowNavModal } = useContext(GlobalContext);
+  const { user, isAuthUser, setIsAuthUser } = useContext(GlobalContext);
+
+  const router = useRouter();
+
+  const handleLogout = () => {
+    setIsAuthUser(false);
+    setIsAuthUser(null);
+    Cookies.remove('token');
+    localStorage.clear();
+    router.push('/');
+  };
 
   return (
     <>
@@ -96,11 +104,10 @@ const Navbar = () => {
                   Admin View
                 </button>
               )
-            ) : (
-              <></>
-            )}
+            ) : null}
             {isAuthUser ? (
               <button
+                onClick={handleLogout}
                 className={
                   'mt-1.5 inline-block bg-green-500 px-5 py-3 text-xs font-medium upprcase tracking-wide text-white'
                 }
@@ -109,6 +116,7 @@ const Navbar = () => {
               </button>
             ) : (
               <button
+                onClick={() => router.push('/login')}
                 className={
                   'mt-1.5 inline-block bg-green-500 px-5 py-3 text-xs font-medium upprcase tracking-wide text-white'
                 }

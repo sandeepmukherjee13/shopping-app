@@ -2,8 +2,10 @@
 import { loginFormControls } from '@/utils';
 import InputComponent from '@/components/FormElements/InputComponent';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { login } from '@/services/login';
+import { GlobalContext } from '@/context';
+import Cookies from 'js-cookie';
 
 const initialFormdata = {
   email: '',
@@ -12,6 +14,10 @@ const initialFormdata = {
 
 const Login = () => {
   const [formData, setFormData] = useState(initialFormdata);
+
+  const { isAuthUser, setIsAuthUser, user, setUser } =
+    useContext(GlobalContext);
+
   const router = useRouter();
 
   function isValidForm() {
@@ -26,8 +32,24 @@ const Login = () => {
   const handleLogin = async () => {
     const res = await login(formData);
     console.log(res);
-  };
 
+    if (res.success) {
+      setIsAuthUser(true);
+      setUser(res?.finalData?.user);
+      setFormData(initialFormdata);
+      Cookies.set('token', res?.finalData?.token);
+      localStorage.setItem('user', JSON.stringify(res?.finalData?.user));
+    } else {
+      setIsAuthUser(false);
+    }
+  };
+  console.log('isauth user', isAuthUser);
+  console.log('user', user);
+  useEffect(() => {
+    if (isAuthUser) {
+      router.push('/');
+    }
+  }, [isAuthUser]);
   return (
     <div className="bg-white relative">
       <div className="flex flex-col items-center justify-between pt-0 pr-10 pb-0 pl-10 mt-8 mr-auto xl:px-5 lg:flex-row">
