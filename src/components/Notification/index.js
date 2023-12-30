@@ -11,6 +11,7 @@ export default function Notification() {
       closeOnClick
       pauseOnFocusLoss
       draggable
+      pauseOnHover
       theme="light"
       rtl={false}
     />
