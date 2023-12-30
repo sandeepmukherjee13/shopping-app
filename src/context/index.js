@@ -8,6 +8,10 @@ export default function GlobalState({ children }) {
   const [showNavModal, setShowNavModal] = useState(false);
   const [isAuthUser, setIsAuthUser] = useState(null);
   const [user, setUser] = useState(null);
+  const [componentLevelLoader, setComponentLevelLoader] = useState({
+    loading: false,
+    id: ''
+  });
 
   useEffect(() => {
     if (Cookies.get('token') !== undefined) {
@@ -27,7 +31,9 @@ export default function GlobalState({ children }) {
         isAuthUser,
         setIsAuthUser,
         user,
-        setUser
+        setUser,
+        componentLevelLoader,
+        setComponentLevelLoader
       }}
     >
       {children}
