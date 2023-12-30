@@ -7,6 +7,8 @@ import { login } from '@/services/login';
 import { GlobalContext } from '@/context';
 import Cookies from 'js-cookie';
 import ComponentLevelLoader from '@/components/Loader/componentlevel';
+import Notification from '@/components/Notification';
+import { toast } from 'react-toastify';
 
 const initialFormdata = {
   email: '',
@@ -42,6 +44,7 @@ const Login = () => {
     console.log(res);
 
     if (res.success) {
+      toast.success(res.message, { position: toast.POSITION.TOP_RIGHT });
       setIsAuthUser(true);
       setUser(res?.finalData?.user);
       setFormData(initialFormdata);
@@ -49,6 +52,7 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(res?.finalData?.user));
       setComponentLevelLoader({ loading: false, id: '' });
     } else {
+      toast.error(res.message, { position: toast.POSITION.TOP_RIGHT });
       setIsAuthUser(false);
       setComponentLevelLoader({ loading: false, id: '' });
     }
@@ -115,6 +119,7 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <Notification />
     </div>
   );
 };
