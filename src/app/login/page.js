@@ -6,6 +6,7 @@ import { useContext, useEffect, useState } from 'react';
 import { login } from '@/services/login';
 import { GlobalContext } from '@/context';
 import Cookies from 'js-cookie';
+import ComponentLevelLoader from '@/components/Loader/componentlevel';
 
 const initialFormdata = {
   email: '',
@@ -15,8 +16,14 @@ const initialFormdata = {
 const Login = () => {
   const [formData, setFormData] = useState(initialFormdata);
 
-  const { isAuthUser, setIsAuthUser, user, setUser } =
-    useContext(GlobalContext);
+  const {
+    isAuthUser,
+    setIsAuthUser,
+    user,
+    setUser,
+    componentLevelLoader,
+    setComponentLevelLoader
+  } = useContext(GlobalContext);
 
   const router = useRouter();
 
@@ -30,6 +37,7 @@ const Login = () => {
       : false;
   }
   const handleLogin = async () => {
+    setComponentLevelLoader({ loading: true, id: '' });
     const res = await login(formData);
     console.log(res);
 
@@ -39,12 +47,12 @@ const Login = () => {
       setFormData(initialFormdata);
       Cookies.set('token', res?.finalData?.token);
       localStorage.setItem('user', JSON.stringify(res?.finalData?.user));
+      setComponentLevelLoader({ loading: false, id: '' });
     } else {
       setIsAuthUser(false);
+      setComponentLevelLoader({ loading: false, id: '' });
     }
   };
-  console.log('isauth user', isAuthUser);
-  console.log('user', user);
   useEffect(() => {
     if (isAuthUser) {
       router.push('/');
@@ -81,7 +89,17 @@ const Login = () => {
                   disabled={!isValidForm()}
                   onClick={handleLogin}
                 >
-                  Login
+                  {componentLevelLoader && componentLevelLoader.loading ? (
+                    <ComponentLevelLoader
+                      text={'Logging In'}
+                      loading={
+                        componentLevelLoader && componentLevelLoader.loading
+                      }
+                      color={'#FFFFFF'}
+                    />
+                  ) : (
+                    'Login'
+                  )}
                 </button>
                 <div className="flex flex-col gap-2">
                   <p>New to Website</p>
