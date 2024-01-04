@@ -187,3 +187,15 @@ export const AvailableSizes = [
     label: 'L'
   }
 ];
+
+export const firebaseConfig = {
+  apiKey: 'AIzaSyA23wKIFzDK81dZXvqjuqrL7eUnrmjOd4U',
+  authDomain: 'next-js-shopping-app-2023.firebaseapp.com',
+  projectId: 'next-js-shopping-app-2023',
+  storageBucket: 'next-js-shopping-app-2023.appspot.com',
+  messagingSenderId: '579047270100',
+  appId: '1:579047270100:web:e3bf7bc72e9dd6f523bd41',
+  measurementId: 'G-P08LT79C87'
+};
+
+export const firebaseStorageURL = 'gs://next-js-shopping-app-2023.appspot.com';
