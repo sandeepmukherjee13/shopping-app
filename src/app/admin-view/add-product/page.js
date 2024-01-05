@@ -74,6 +74,16 @@ export default function AdminAddNewProduct() {
       setFormData({ ...formData, imageUrl: extractImageUrl });
     }
   }
+  function handleTileClick(getCurrentItem) {
+    let cpySizes = [...formData.sizes];
+    const index = cpySizes.findIndex((item) => item.id === getCurrentItem.id);
+    if (index === -1) {
+      cpySizes.push(getCurrentItem);
+    } else {
+      cpySizes = cpySizes.filter((item) => item.id !== getCurrentItem.id);
+    }
+    setFormData({ ...formData, sizes: cpySizes });
+  }
 
   console.log(formData);
 
@@ -89,7 +99,11 @@ export default function AdminAddNewProduct() {
           />
           <div className="flex gap-2 flex-col">
             <label>Available Sizes</label>
-            <TileComponent data={AvailableSizes} />
+            <TileComponent
+              selected={formData.sizes}
+              data={AvailableSizes}
+              onClick={handleTileClick}
+            />
           </div>
           {adminAddProductFormControls.map((controlItem) =>
             controlItem.componentType === 'input' ? (
